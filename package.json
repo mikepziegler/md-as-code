@@ -1,0 +1,31 @@
+{
+  "name": "simple-md",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikezyeman/simple-md.git"
+  },
+  "keywords": [
+    "Markdown",
+    "Javascript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mikezyeman/simple-md/issues"
+  },
+  "homepage": "https://github.com/mikezyeman/simple-md#readme",
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "mocha": "^9.1.1"
+  }
+}
