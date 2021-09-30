@@ -30,29 +30,12 @@ MD.BoldItalic = function(text) { return `***${text}***`; }
 
 // BlockQuotes
 MD.BlockQuotes = function(text) { return `> ${text}`; }
-MD.MultipleBlockQuotes = function (texts) {
-    _.forEach(texts, function(text) {
-        this.addLine(this.BlockQuotes(text));
-    })
-}
-MD.NestedBlock = function(texts) {
-
-}
 
 // OrderedList
 MD.OrderedList = function (text) { return `1. ${text}`; }
 
 // UnorderedList
 MD.UnorderedListElement = function (text) { return `- ${text}`; }
-MD.UnorderedList = function (texts) {
-    _.forEach(texts, function(text) {
-        this.addLine(this.UnorderedList(text));
-    })
-}
-MD.NestedUnorderedList = function(texts) {
-
-
-}
 
 // Codeblocks
 MD.Code = function (code) { return `\`${code}\``; }
@@ -83,6 +66,32 @@ MD.prototype.changeLine = function(line, text) {
 
 }
 
+/**
+ *
+ * More Complicated Syntax
+ *
+ */
+MD.MultipleBlockQuotes = function (texts) {
+    _.forEach(texts, function(text) {
+        this.addLine(this.BlockQuotes(text));
+    })
+}
+MD.NestedBlock = function(texts) {
+
+}
+
+MD.prototype.UnorderedList = function (texts) {
+    const add = this.addLine("hallo");
+
+    _.forEach(texts, function(text) {
+        add()
+    })
+}
+
+MD.NestedUnorderedList = function(texts) {
+
+
+}
 
 /**
  * Error handeling
@@ -110,19 +119,12 @@ MD.prototype.writeFile = function() {
         return;
     }
 
-    fs.outputFile(this.filePath, _.join(this.textLines, "\n"), function(err) {
+    fs.outputFile(this.filePath, _.join(this.getText(), "\n"), function(err) {
         if (err != null) {
             console.log(err);
         }
     })
 }
 
-let file = new MD("blabla");
-
-file.addLine(MD.H1("Hallo"));
-file.addLine(MD.P(`Das hier ist ein text`))
-file.addLine(MD.P(`Das hier ist auch ein text`))
-file.addLine(MD.P(`Das hier ist ein text mit einem ${MD.Bold('fetten')} Text`))
-
-file.writeFile();
+module.exports = MD();
 
