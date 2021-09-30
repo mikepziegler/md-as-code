@@ -1,84 +1,128 @@
-
-const fs = require('fs-extra')
-const path = require('path')
-const os = require('os')
-
+const fs = require('fs-extra');
 const _ = require('lodash')
-const array = require('lodash')
 
-console.log(process.cwd());
+const mdSearchExpression = new RegExp(/.*\.md$/)
 
-function MD(filePath) {
-
-    this.filePath = filePath;
-    this.content = [];
+function MD(path) {
+    this.setFilePath(path)
+    this.textLines = [];
 }
 
+/**
+ * Syntax from MarkDown as Variables and Functions
+ */
+
 // Headers
-MD.prototype.H1 = "# ";
-MD.prototype.H2 = "## ";
-MD.prototype.H3 = "### ";
-MD.prototype.H4 = "#### ";
-MD.prototype.H5 = "##### ";
-MD.prototype.H6 = "###### ";
+MD.H1 = function(text) { return `# ${text}`};
+MD.H2 = function(text) { return `## ${text}`};
+MD.H3 = function(text) { return `### ${text}`};
+MD.H4 = function(text) { return `#### ${text}`};
+MD.H5 = function(text) { return `##### ${text}`};
+MD.H6 = function(text) { return `###### ${text}`};
+
+// Paragraph
+MD.P = function(text) { return `${text}\n`}
 
 // Italic, Bold and both
-MD.prototype.Italic = function(text) { return `*${text}*`; }
-MD.prototype.Bold = function(text) { return `**${text}**`; }
-MD.prototype.BoldItalic = function(text) { return `***${text}***`; }
+MD.Italic = function(text) { return `*${text}*`; }
+MD.Bold = function(text) { return `**${text}**`; }
+MD.BoldItalic = function(text) { return `***${text}***`; }
 
 // BlockQuotes
-MD.prototype.BlockQuotes = function(text) { return `> ${text}`; }
-MD.prototype.MultipleBlockQuotes = function (texts) {
+MD.BlockQuotes = function(text) { return `> ${text}`; }
+MD.MultipleBlockQuotes = function (texts) {
     _.forEach(texts, function(text) {
         this.addLine(this.BlockQuotes(text));
     })
 }
-MD.prototype.NestedBlock = function(texts) {
+MD.NestedBlock = function(texts) {
 
 }
 
 // OrderedList
-MD.prototype
+MD.OrderedList = function (text) { return `1. ${text}`; }
 
 // UnorderedList
-MD.prototype.UnorderedListElement = function (text) { return `- ${text}`; }
-MD.prototype.UnorderedList = function (texts) {
+MD.UnorderedListElement = function (text) { return `- ${text}`; }
+MD.UnorderedList = function (texts) {
     _.forEach(texts, function(text) {
         this.addLine(this.UnorderedList(text));
     })
 }
-MD.prototype.NestedUnorderedList = function(texts) {
+MD.NestedUnorderedList = function(texts) {
+
 
 }
 
 // Codeblocks
-MD.prototype.Code = function (code) { return `\`${code}\``; }
-MD.prototype.CodeBlock = function (code) { return `\`\`\`${code}\`\`\``}
+MD.Code = function (code) { return `\`${code}\``; }
+MD.CodeBlock = function (code) { return `\`\`\`${code}\`\`\``}
 
 // Horizontal Rules
-MD.prototype.Rules = function () { return "***";  }
+MD.Rules = function () { return "***";  }
 
 // Link
-MD.prototype.Link = function(title, url) { return `[${title}](${url})`}
-MD.prototype.ImageLink = function(title, url) { return `!${this.ImageLink(title, url)}`}
+MD.Link = function(title, url) { return `[${title}](${url})`}
+MD.ImageLink = function(title, url) { return `!${this.ImageLink(title, url)}`}
 
+/**
+ * Text Management and manipulation
+ */
+MD.prototype.getText = function () {return this.textLines}
+MD.prototype.addLine = function(line) { this.textLines = _.concat(this.textLines, line) }
 
-MD.prototype.getFile = function() {
-    console.log(this.file)
+MD.prototype.insertLine = function(line, text) {
+
 }
 
-MD.prototype.setFile = function(file) {
-    this.filePath = file;
+MD.prototype.removeLine = function(line) {
+
 }
 
-MD.prototype.addLine = function(line) {
-    this.content = _.concat(this.content, line);
+MD.prototype.changeLine = function(line, text) {
+
 }
 
 
+/**
+ * Error handeling
+ */
+function sendError(message) {
+    console.error(`Simple-MD error: ${message}`)
+}
 
-let file = new MD("hallo");
-file.getFile();
-file.setFile("bye");
-file.getFile();
+/**
+ * file manipulation
+ */
+MD.prototype.setFilePath = function(path) {
+    this.filePath = path.match(mdSearchExpression) ? path : `${path}.md`;
+}
+MD.prototype.getFilePath = function() {
+    return this.filePath;
+}
+MD.prototype.readMD = function(path) {
+
+}
+MD.prototype.writeFile = function() {
+
+    if (this.filePath === "") {
+        sendError("No file path set.");
+        return;
+    }
+
+    fs.outputFile(this.filePath, _.join(this.textLines, "\n"), function(err) {
+        if (err != null) {
+            console.log(err);
+        }
+    })
+}
+
+let file = new MD("blabla");
+
+file.addLine(MD.H1("Hallo"));
+file.addLine(MD.P(`Das hier ist ein text`))
+file.addLine(MD.P(`Das hier ist auch ein text`))
+file.addLine(MD.P(`Das hier ist ein text mit einem ${MD.Bold('fetten')} Text`))
+
+file.writeFile();
+
