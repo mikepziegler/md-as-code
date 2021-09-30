@@ -126,5 +126,5 @@ MD.prototype.writeFile = function() {
     })
 }
 
-module.exports = MD();
+module.exports = MD;
 

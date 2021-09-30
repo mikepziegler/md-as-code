@@ -1,6 +1,8 @@
 var assert = require('assert');
 
-const file = new MD
+var MD = require('automatic-md');
+
+MD.
 
 describe('Array', function() {
 
