@@ -2,7 +2,7 @@
   "name": "md-as-code",
   "version": "0.0.1",
   "description": "",
-  "main": "src/main.js",
+  "main": "src/MD.js",
   "scripts": {
     "test": "mocha"
   },
