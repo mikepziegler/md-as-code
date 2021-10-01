@@ -51,11 +51,18 @@ MD.ImageLink = function(title, url) { return `!${this.ImageLink(title, url)}`}
 /**
  * Text Management and manipulation
  */
-MD.prototype.getText = function () {return this.textLines}
+MD.prototype.getText = function()  {return this.textLines; }
+
 MD.prototype.addLine = function(line) { this.textLines = _.concat(this.textLines, line) }
+MD.prototype.addLines = function(lines) {
+    _.forEach(lines, function (line) {
+        this.addLine(line);
+    })
+}
+
 
 MD.prototype.insertLine = function(line, text) {
-
+    this.textLines
 }
 
 MD.prototype.removeLine = function(line) {
@@ -89,7 +96,6 @@ MD.prototype.UnorderedList = function (texts) {
 }
 
 MD.NestedUnorderedList = function(texts) {
-
 
 }
 
