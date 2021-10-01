@@ -1,6 +1,6 @@
 {
   "name": "md-as-code",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "src/MD.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mikezyeman/simple-md.git"
+    "url": "git+https://github.com/mikezyeman/md-as-code.git"
   },
   "keywords": [
     "Markdown",
@@ -24,7 +24,7 @@
   "dependencies": {
     "fs-extra": "^10.0.0",
     "lodash": "^4.17.21",
-    "md-as-code": "^0.1.0"
+    "md-as-code": "^0.1.1"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

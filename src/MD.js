@@ -1,17 +1,56 @@
 const fs = require('fs-extra');
 const _ = require('lodash')
 
-const syntax = require('./syntax');
 const throwError = require('./error');
 
 const mdSearchExpression = new RegExp(/.*\.md$/)
 
 function MD(path) {
+
+    console.log("hi");
+
     this.setFilePath(path)
     this.textLines = [];
 }
 
-MD = syntax;
+// Headers
+MD.H1 = function(text) { return `# ${text}`};
+MD.H2 = function(text) { return `## ${text}`};
+MD.H3 = function(text) { return `### ${text}`};
+MD.H4 = function(text) { return `#### ${text}`};
+MD.H5 = function(text) { return `##### ${text}`};
+MD.H6 = function(text) { return `###### ${text}`};
+
+// Paragraph
+MD.P = function(text) { return `${text}\n`}
+
+// Italic, Bold and both
+MD.Italic = function(text) { return `*${text}*`; }
+MD.Bold = function(text) { return `**${text}**`; }
+MD.BoldItalic = function(text) { return `***${text}***`; }
+
+// BlockQuotes
+MD.BlockQuotes = function(text) { return `> ${text}`; }
+
+// OrderedList
+MD.OrderedList = function (text) { return `1. ${text}`; }
+
+// UnorderedList
+MD.UnorderedListElement = function (text) { return `- ${text}`; }
+
+// Codeblocks
+MD.Code = function (code) { return `\`${code}\``; }
+MD.CodeBlock = function (code) { return `\`\`\`${code}\`\`\``}
+
+// Horizontal Rules
+MD.Rules = function () { return "***";  }
+
+// Link
+MD.Link = function(title, url) { return `[${title}](${url})`}
+MD.ImageLink = function(title, url) { return `!${this.ImageLink(title, url)}`}
+
+
+
 
 MD.prototype.getText = function()  { return this.textLines; }
 
@@ -22,7 +61,7 @@ MD.prototype.addLines = function(lines) {
     }
 }
 
-MD.MultiLineBlockQuote = function (texts) {
+MD.prototype.MultiLineBlockQuote = function (texts) {
     for (let i = 0; i < texts; i++) {
         this.addLine(MD.BlockQuotes(texts[i]))
     }
@@ -62,9 +101,6 @@ MD.prototype.NestedUnorderedList = function(texts) {
 }
 
 MD.prototype.setFilePath = function(path) {
-    if (path === "") {
-        throwError("Path should not be empty");
-    }
     this.filePath = path.match(mdSearchExpression) ? path : `${path}.md`;
 }
 

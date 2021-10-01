@@ -1,7 +1,9 @@
 var assert = require('assert');
 
-var MD = require('md-as-code');
+const MD = require('md-as-code');
 
+const md1 = new MD("test");
+console.log(md1.getFilePath());
 
 describe('Function Test', function() {
     describe('start MD()', function() {
@@ -14,25 +16,17 @@ describe('Function Test', function() {
             }
         });
 
-        it('should not start MD() without passing parameter', function() {
-            try {
-                const md = new MD();
 
-            } catch (e) {
 
-            }
+
+        it('should contain name "untitled" when passing no value', function() {
+            const md = new MD();
+
+
+
+
+            assert.equals()
         });
 
-        it('should not start MD() with an empty string as passing parameter', function() {
-
-            const testLine = "Test Zeile";
-
-            try {
-                const md = new MD("");
-
-            } catch (e) {
-
-            }
-        });
     });
 });
