@@ -62,6 +62,9 @@ MD.prototype.NestedUnorderedList = function(texts) {
 }
 
 MD.prototype.setFilePath = function(path) {
+    if (path === "") {
+        throwError("Path should not be empty");
+    }
     this.filePath = path.match(mdSearchExpression) ? path : `${path}.md`;
 }
 

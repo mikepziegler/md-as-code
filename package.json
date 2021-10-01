@@ -1,6 +1,6 @@
 {
   "name": "md-as-code",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "main": "src/MD.js",
   "scripts": {
@@ -24,7 +24,7 @@
   "dependencies": {
     "fs-extra": "^10.0.0",
     "lodash": "^4.17.21",
-    "md-as-code": "^0.0.1"
+    "md-as-code": "^0.1.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
