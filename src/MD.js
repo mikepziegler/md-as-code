@@ -7,7 +7,7 @@ const mdSearchExpression = new RegExp(/.*\.md$/)
 
 function MD(path) {
 
-    console.log("hi");
+    path = path === "" || path === undefined ? "untitled.md" : path;
 
     this.setFilePath(path)
     this.textLines = [];
@@ -122,5 +122,6 @@ MD.prototype.writeFile = function() {
     })
 }
 
-module.exports = MD;
+var md = new MD();
 
+module.exports = MD;
