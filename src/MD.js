@@ -1,7 +1,8 @@
 const fs = require('fs-extra');
 const _ = require('lodash')
 
-const throwError = require('./error');
+const syntax = require('./utils/MD-Syntax')
+const throwError = require('./utils/MD-Error');
 
 const mdSearchExpression = new RegExp(/.*\.md$/)
 
@@ -10,96 +11,66 @@ function MD(path) {
     path = path === "" || path === undefined ? "untitled.md" : path;
 
     this.setFilePath(path)
-    this.textLines = [];
+    this.textArray = [];
 }
 
-// Headers
-MD.H1 = function(text) { return `# ${text}`};
-MD.H2 = function(text) { return `## ${text}`};
-MD.H3 = function(text) { return `### ${text}`};
-MD.H4 = function(text) { return `#### ${text}`};
-MD.H5 = function(text) { return `##### ${text}`};
-MD.H6 = function(text) { return `###### ${text}`};
+MD.H1 = syntax.H1;
+MD.H2 = syntax.H2;
+MD.H3 = syntax.H3;
+MD.H4 = syntax.H4;
+MD.H5 = syntax.H5;
+MD.H6 = syntax.H6;
 
-// Paragraph
-MD.P = function(text) { return `${text}\n`}
+MD.P = syntax.P;
 
-// Italic, Bold and both
-MD.Italic = function(text) { return `*${text}*`; }
-MD.Bold = function(text) { return `**${text}**`; }
-MD.BoldItalic = function(text) { return `***${text}***`; }
+MD.Italic = syntax.Italic;
+MD.Bold = syntax.Bold;
+MD.BoldItalic = syntax.BoldItalic;
 
-// BlockQuotes
-MD.BlockQuotes = function(text) { return `> ${text}`; }
+MD.BlockQuoteElement = syntax.BlockQuoteElement;
 
-// OrderedList
-MD.OrderedList = function (text) { return `1. ${text}`; }
+MD.OrderedList = syntax.OrderedList;
+MD.UnorderedListElement = syntax.UnorderedListElement;
 
-// UnorderedList
-MD.UnorderedListElement = function (text) { return `- ${text}`; }
+MD.Code = syntax.Code;
+MD.CodeBlock = syntax.CodeBlock;
 
-// Codeblocks
-MD.Code = function (code) { return `\`${code}\``; }
-MD.CodeBlock = function (code) { return `\`\`\`${code}\`\`\``}
+MD.Rules = syntax.Rules;
 
-// Horizontal Rules
-MD.Rules = function () { return "***";  }
-
-// Link
-MD.Link = function(title, url) { return `[${title}](${url})`}
-MD.ImageLink = function(title, url) { return `!${this.ImageLink(title, url)}`}
+MD.Link = syntax.Link;
+MD.ImageLink = syntax.ImageLink;
 
 
-
-
-MD.prototype.getText = function()  { return this.textLines; }
-
-MD.prototype.addLine = function(line) { this.textLines = _.concat(this.textLines, line) }
-MD.prototype.addLines = function(lines) {
-    for (let i = 0; i < lines.length; i++) {
-        this.addLine(lines[i]);
-    }
+MD.prototype.addLine = function(obj) {
+    this.textJSON = _.concat(this.textArray, obj);
 }
 
-MD.prototype.MultiLineBlockQuote = function (texts) {
-    for (let i = 0; i < texts; i++) {
-        this.addLine(MD.BlockQuotes(texts[i]))
-    }
-}
 
-MD.prototype.NestedBlockQuote = function(texts) {
-    for (let i = 0; i < texts; i++) {
-        let text = texts[i];
-        if (Array.isArray(text)) {
-            let array = _.map(texts[text], function(el) {
-                return `>${el}`;
-            })
-
-            this.NestedBlockQuote(array)
-        } else {
-            this.addLine(MD.BlockQuotes(text))
+MD.prototype.addParagraph = function(text) { this.addLine({ p: MD.P(text)}); }
+MD.prototype.addParagraphs = function(texts) {
+    if (Array.isArray(texts)) {
+        for (var i = 0; i < texts.length; i++) {
+            this.addParagraph(texts[i]);
         }
+    } else {
+        throwError(`function "addParagraphs" requires an array of strings`);
     }
+}
+
+MD.prototype.addTitle = function(text) { this.addLine(this.H1)};
+
+MD.prototype.BlockQuotes = function(texts) {
+
+
+
 }
 
 MD.prototype.UnorderedList = function(texts) {
-    for (let i = 0; i < texts; i++) {
-        let text = texts[i];
-        this.addLine(MD.UnorderedListElement(text))
-    }
+
 }
 
-MD.prototype.NestedUnorderedList = function(texts) {
-    for (let i = 0; i < texts; i++) {
-        let text = texts[i];
-        if (Array.isArray()) {
-            this.NestedUnorderedList(texts[text])
-        } else {
-            this.addLine()
-        }
-    }
-}
 
+// File
 MD.prototype.setFilePath = function(path) {
     this.filePath = path.match(mdSearchExpression) ? path : `${path}.md`;
 }
@@ -108,7 +79,7 @@ MD.prototype.getFilePath = function() {
     return this.filePath;
 }
 
-MD.prototype.writeFile = function() {
+MD.prototype.writeMD = function() {
 
     if (this.filePath === "") {
         throwError("No file path set.");
@@ -121,6 +92,8 @@ MD.prototype.writeFile = function() {
         }
     })
 }
+
+
 
 var md = new MD();
 
