@@ -20,10 +20,10 @@ module.exports = {
     BlockQuoteElement: function(text) { return `>`; },
 
     // UnorderedList
-    UnorderedListElement: function (text) { return `- ${text}`; },
+    UnorderedListElement: function (text) { return `-`; },
 
     // OrderedList
-    OrderedListElement: function (text) { return `1. ${text}`; },
+    OrderedListElement: function (text) { return `1.`; },
 
     // Codeblocks
     Code: function (code) { return `\`${code}\``; },

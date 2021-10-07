@@ -55,18 +55,36 @@ MD.prototype.addParagraphs = function(texts) {
     } else {
         throwError(`function "addParagraphs" requires an array of strings`);
     }
+    
 }
 
 MD.prototype.addTitle = function(text) { this.addLine(this.H1)};
 
-MD.prototype.BlockQuotes = function(texts) {
-
-
-
+MD.prototype.BlockQuotes = function(array) {
+    for (var i = 0; i < texts.length; i++) {
+        var arrayElement = texts[i];
+        if (Array.isArray(arrayElement)) {
+            this.BlockQuotes(_.map(arrayElement, (el) => {
+                return Array.isArray(arrayElement) ? el : `> ${el}`;
+            }));
+        } else {
+            this.addLine(`> ${arrayElement}`)
+        }
+    }
 }
 
 MD.prototype.UnorderedList = function(texts) {
 
+
+    function mapping(prefix, array) {
+
+    }
+
+    mapping('', texts);
+
+    for (var i = 0; i < texts.length; i++) {
+
+    }
 }
 
 
